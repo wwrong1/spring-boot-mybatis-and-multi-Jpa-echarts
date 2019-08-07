@@ -1,6 +1,7 @@
 package com.wwr.echarts.controller;
 
 import com.wwr.echarts.service.GetChartService;
+import com.wwr.echarts.util.HttpRequest;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -23,10 +24,9 @@ public class EchartsController {
     @RequestMapping(value="/getChart/{id}", method = RequestMethod.GET)
     public ModelAndView test(/**HttpServletRequest request**/@PathVariable("id")  int id){
 
-        ModelAndView mav = new ModelAndView("echarts");
+        ModelAndView mav = new ModelAndView("test");
         mav.addObject("option",getChartService.getChartJson(id));
         return mav;
-
     }
 
     /**将url传到前台，利用ajax访问方法的写法
@@ -69,7 +69,20 @@ public class EchartsController {
     @ResponseBody
     public String queryCharts(@PathVariable("org") String org){
         String s = getChartService.queryCharts(org);
+
         return s;
+    }
+
+
+    @RequestMapping(value="/downloadCharts/{org}", method= RequestMethod.GET )
+    @ResponseBody
+    public String downloadCharts(@PathVariable("org") String org){
+
+        String s =  HttpRequest.sendGet("http://localhost:8080/getChart",org);
+        System.out.println(s);
+
+        return s;
+
     }
 
 
